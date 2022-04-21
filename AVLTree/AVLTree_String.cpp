@@ -5,14 +5,15 @@ using namespace std;
 
 struct Node
 {
-    int val, h;
+    int h;
+    string val;
     Node *l, *r, *p;
     Node(){
-        val = 0;
+        val = "";
         h = 1;
         l = r = p = nullptr;
     }
-    Node(int val) : val(val){
+    Node(string val) : val(val){
         h = 1;
         l = r = p = nullptr;
     }
@@ -91,7 +92,7 @@ struct AVLTree
         return (x->l? x->l->h : 0) - (x->r? x->r->h : 0);
     }
 
-    void insert(int val){
+    void insert(string val){
         size++;
         if (!root) {
             root = new Node(val);
@@ -99,7 +100,8 @@ struct AVLTree
         } 
         Node *x = root, **p;
         while (1){
-            if (val <= x->val){
+            if (val == x->val) return;
+            if (val < x->val){
                 if (!x->l) {
                     p = &x->l;
                     break;
@@ -118,7 +120,7 @@ struct AVLTree
         rebalance(*p);
     }
 
-    Node *remove(int val){
+    Node *remove(string val){
         if (!root) return nullptr;
         Node *x = root;
         while (1){
@@ -166,19 +168,19 @@ struct AVLTree
 
 
     void print(){
-        vector<int> ret;
+        vector<string> ret;
         print(root, ret);
         for (auto x : ret) cout << x << ' ';
         cout << endl;
     }
 
     void struct_print(){
-        vector<vector<int>> ret(30);
-        for (int i=0; i<30; ++i) ret[i].resize(size,-100);
+        vector<vector<string>> ret(30);
+        for (int i=0; i<30; ++i) ret[i].resize(size,"NULL");
         int count = 0;
         bfs_print(root, 0, count, ret);
         for (auto x : ret){
-            for (auto y : x) if (y == -100) cout << "  ";
+            for (auto y : x) if (y == "NULL") cout << "      ";
             else cout << y << ' ';
             cout << endl;
         }
@@ -197,27 +199,40 @@ struct AVLTree
         assert(abs(balancefactor(x))<=1);
     }
 
-    void print(Node *x, vector<int> &ret){
-        if (x->l) print(x->l, ret);
+    void print(Node *x, vector<string> &ret){
         ret.push_back(x->val);
+        if (x->l) print(x->l, ret);
         if (x->r) print(x->r, ret);
     }
 
-    void bfs_print(Node *x, int dep, int &count, vector<vector<int>> &ret){
+    void bfs_print(Node *x, int dep, int &count, vector<vector<string>> &ret){
         if (x->l) bfs_print(x->l, dep+1, count, ret);
-        ret[dep][count++] = balancefactor(x);
+        ret[dep][count++] = x->val;
         if (x->r) bfs_print(x->r, dep+1, count, ret);
     }
 
 } tree;
 
-
+int hashs(string s){
+    int ret = 0;
+    for (int i=0; i<s.size(); ++i) ret += s[i];
+    return ret%100;
+}
 
 
 int main()
 {
     fastio
-    for (int i=3000; i>=1; --i) tree.insert(i);
-    tree.push();
+    string s; 
+    for (int i=0; i<13; ++i){
+        getline(cin, s);
+        int n = s.size();
+        for (int i=0;i<n-5; ++i){
+            string tmp = "";
+            for (int j=i; j<i+6; ++j) tmp += s[j];
+            if (hashs(tmp) == 82) tree.insert(tmp);
+        }
+    }
     tree.struct_print();
+    tree.print();
 } // namespace std;
