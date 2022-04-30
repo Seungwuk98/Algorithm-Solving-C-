@@ -2,93 +2,44 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="19374c16-eff9-48fc-8bf4-61bd68f55b86" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../16978BOJ_arr_query.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_10/cpp1_10.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_10/cpp1_10.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_10/output.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_11/cpp1_11.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_11/cpp1_11.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_11/input.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_12/cpp1_12.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_12/cpp1_12.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_12/output.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_13/cpp1_13.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_13/cpp1_13.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_13/input.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_14/cpp1_14.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_14/cpp1_14.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_15/cpp1_15.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_15/cpp1_15.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_16/cpp1_16.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_16/cpp1_16.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_17/cpp1_17.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_17/cpp1_17.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_18/cpp1_18.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_18/cpp1_18.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_19/cpp1_19.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_19/cpp1_19.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_20/cpp1_20.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_20/cpp1_20.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_21/cpp1_21.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_21/cpp1_21.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_21/cpp1_21_2.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_21/cpp1_21_2.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_22/cpp1_22.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_22/cpp1_22.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_23/cpp1_23.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_24/cpp1_24.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_24/cpp1_24.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_25/cpp1_25.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_25/cpp1_25.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_26/cpp1_26.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_26/cpp1_26.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_27/cpp1_27.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_27/cpp1_27.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_28/cpp1_28.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_28/cpp1_28.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_29/cpp1_29.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_29/cpp1_29.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_30/cpp1_30.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_30/cpp1_30.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_31/cpp1_32.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_31/cpp1_32.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_32/cpp1_32.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_32/cpp1_32.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_33/cpp1_33.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_33/cpp1_33.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_34/cpp1_34.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_34/cpp1_34.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_35/cpp1_35.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_35/cpp1_35.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_35/func.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_36/cpp1_36.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_36/cpp1_36.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_37/cpp1_37.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_37/cpp1_37.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_38/cpp1_38.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_38/cpp1_38.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_39/cpp1_39.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_39/cpp1_39.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_4/cpp1_4.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_4/cpp1_4.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_5/cpp1_5.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_5/cpp1_5.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_6/cpp1_6.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_6/cpp1_6.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_7/cpp1_7.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_7/cpp1_7.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_7/cpp1_7_2.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_7/cpp1_7_2.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_8/cpp1_8.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_8/cpp1_8.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_9/cpp1_9.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cppallinone/cpp1_9/cpp1_9.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/c_cpp_properties.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/c_cpp_properties.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/tasks.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/tasks.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/input.txt" beforeDir="false" afterPath="$PROJECT_DIR$/input.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input9.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../python/practice.py" beforeDir="false" afterPath="$PROJECT_DIR$/../python/practice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../input.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../input.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../output.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../short.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../short.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/practice.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/practice.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/practice.out" beforeDir="false" afterPath="$PROJECT_DIR$/practice.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/random1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/random9.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/result9.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +47,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="213JybGDu4YPFCp1yA5EuMfjwOb" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />

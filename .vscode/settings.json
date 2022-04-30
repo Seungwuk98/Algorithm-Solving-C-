@@ -1,39 +1,7 @@
 {
+    "C_Cpp.errorSquiggles": "Enabled",
     "files.associations": {
         "*.html": "html",
-        "iostream": "cpp",
-        "vector": "cpp",
-        "ostream": "cpp",
-        "new": "cpp",
-        "array": "cpp",
-        "tuple": "cpp",
-        "utility": "cpp",
-        "initializer_list": "cpp",
-        "cstring": "cpp",
-        "algorithm": "cpp",
-        "stl_algobase.h": "c",
-        "chrono": "cpp",
-        "random": "cpp",
-        "complex": "cpp",
-        "fstream": "cpp",
-        "functional": "cpp",
-        "shared_mutex": "cpp",
-        "sstream": "cpp",
-        "typeindex": "cpp",
-        "typeinfo": "cpp",
-        "regex": "cpp",
-        "deque": "cpp",
-        "forward_list": "cpp",
-        "list": "cpp",
-        "string": "cpp",
-        "unordered_map": "cpp",
-        "unordered_set": "cpp",
-        "rope": "cpp",
-        "valarray": "cpp",
-        "*.tcc": "cpp",
-        "cmath": "cpp",
-        "iosfwd": "cpp",
-        "bitset": "cpp"
-    },
-    "C_Cpp.errorSquiggles": "Disabled"
+        "new": "cpp"
+    }
 }
