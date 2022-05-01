@@ -66,9 +66,27 @@ struct RedBlackTree{
         }
     }
 
+    void print(){
+        print(root);
+        cout << endl;
+    }
+
+    void print_structure(){
+        int h = find_height(root, 0);
+        vector<vector<string>> ret(h);
+        for (int i=0; i<h; ++i) ret[i].resize(size+2);
+        int cnt = 0;
+        print_structure(root, cnt, 0, ret);
+        for (auto x : ret) {
+            for (auto y : x) if (y == "") cout << "     ";
+            else cout << y << ' ';
+            cout << endl;
+        }
+    }
+
 private:
     void update(Node *x){
-        x->sz = 1;
+        x->sz = x != NIL;
         if (x->l) x->sz += x->l->sz;
         if (x->r) x->sz += x->r->sz;
     }
@@ -115,7 +133,7 @@ private:
         *s = new Node(key);
         (*s)->p = x;
         (*s)->l = (*s)->r = NIL;
-        while (x!=NIL){
+        while (x){
             update(x); x = x->p;
         }
         return *s;
@@ -126,20 +144,26 @@ private:
         Node *x = root;
         while (1){
             if (key == x->key) break;
-            if (key < x->key) if ((x=x->l) == NIL) return nullptr;
-            else if ((x=x->r) == NIL) return nullptr;
+            if (key < x->key) {
+                if (x->l == NIL) return nullptr;
+                x = x->l;
+            }
+            else {
+                if (x->r == NIL) return nullptr;
+                x = x->r;
+            } 
         }
         Node *y, *m;
         if (x->l==NIL && x->r==NIL) {
             y = x, m = NIL;
-        } else if (x->r == NIL){
-            y = x->l;
-            while (y->r != NIL) y = y->r;
-            m = y->l;
-        } else {
+        } else if (x->l == NIL){
             y = x->r;
             while (y->l != NIL) y = y->l;
             m = y->r;
+        } else {
+            y = x->l;
+            while (y->r != NIL) y = y->r;
+            m = y->l;
         }
         x->key = y->key;
         (y->p? y->p->l == y? y->p->l : y->p->r : root) = m;
@@ -183,12 +207,32 @@ private:
         Node *g = p->p, *s = g->l==p? g->r : g->l;
         if (s->color == RED) {
             p->color = s->color = BLACK;
-            g->color = RED;
+            g->color = g==root? BLACK : RED;
             return g;
         }
         if ((p->l==x) != (g->l==p)) rotate(x), swap(x, p);
         rotate(p);
         swap(p->color, g->color);
+        return nullptr;
+    }
+
+    void print(Node *x){
+        if (x == NIL) return;
+        print(x->l);
+        cout << x->key << "  ";
+        print(x->r);
+    }
+
+    int find_height(Node *x, int dep){
+        if (x == NIL) return dep;
+        return max(find_height(x->l, dep+1), find_height(x->r, dep+1));
+    }
+
+    void print_structure(Node *x, int &cnt, int dep, vector<vector<string>> &ret){
+        if (x==NIL) return;
+        print_structure(x->l, cnt, dep+1, ret);
+        ret[dep][cnt++] = to_string(x->key) +"-"+ (x->color == RED? "R" : "B");
+        print_structure(x->r, cnt, dep+1, ret);
     }
 };
 
@@ -196,6 +240,15 @@ private:
 int main()
 {
     RedBlackTree Rb;
-    Rb.insert(1);
-    cout << Rb[0] << endl;
+    set<int> s;
+    for (int i=1; i<=20; ++i) {
+        int x = rand()%100;
+        cout << x << ' ';
+        Rb.insert(x);
+    }
+
+    Rb.remove(36);
+    Rb.remove(62);
+    cout << endl; 
+    Rb.print_structure();
 } // namespace std;
