@@ -6,6 +6,7 @@ const bool BLACK = 0;
 
 struct Node
 {
+    
     int sz, key;
     Node *l, *r, *p;
     bool color;
@@ -15,7 +16,8 @@ struct Node
         key = 0;
         l = r = p = nullptr;
     }
-    Node(int key, bool color = RED, int sz = 1) : key(key), sz(sz), color(color){
+    Node(int key, bool color = RED, int sz = RED) 
+        : key(key), sz(sz), color(color)   {
         l = r = p = nullptr;
     }
     ~Node(){
@@ -50,7 +52,7 @@ struct RedBlackTree{
     int remove(int key){
         Node *x = BST_remove(key);
         if (!x) return 0;
-        size--;
+        size--; 
         while (x) {
             x = remove_rebalacing(x);
         } 
@@ -69,15 +71,16 @@ struct RedBlackTree{
     }
 
     int kth_element(int k){
-        return operator[] (k+1);
+        if (k > size) return 0;
+        return operator[] (k-1);
     }
 
     int rank(int key) {
         Node *x = BST_search(key);
-        if (!x) return -1;
-        int ret = x->r->sz+1;
+        if (!x) return 0;
+        int ret = x->l->sz+1;
         while (x->p){
-            if (x->p->l == x) ret += x->p->r->sz+1;
+            if (x->p->r == x) ret += x->p->l->sz+1;
             x = x->p;
         }
         return ret;
@@ -130,7 +133,7 @@ private:
         if (root == NIL) {
             root = new Node(key, BLACK);
             root->l = root->r = NIL;
-            return nullptr;
+            return root;
         }
         Node *x = root, **s;
         while (1){
@@ -192,7 +195,10 @@ private:
         m->color = BLACK;
         y->l = y->r = nullptr;
         delete y;
-        if (y_color != m_color) return nullptr;
+        /* 논리 전개상 nullptr을 반환하는게 맞으나, 
+        nullptr을 반환할 경우 remove 성공 유무를 판단 불가 
+        따라서 의미없는 root 를 반환 */
+        if (y_color != m_color) return root;
         return m;
     }
 
@@ -269,7 +275,7 @@ private:
     void print_structure(Node *x, int &cnt, int dep, vector<vector<string>> &ret){
         if (x==NIL) return;
         print_structure(x->l, cnt, dep+1, ret);
-        ret[dep][cnt++] = to_string(x->key) +"-"+ (x->color == RED? "R" : "B");
+        ret[dep][cnt++] = to_string(x->key) +"-"+ (x->color == RED? "R" : "B") + to_string(x->sz);
         print_structure(x->r, cnt, dep+1, ret);
     }
 };
@@ -278,17 +284,12 @@ private:
 int main()
 {
     RedBlackTree Rb;
-
-    int n; cin >> n;
-    while (n--){
-        char x; int y;
-        cin >> x >> y;
-        cout << x << ' ' << y << ' ' << Rb.size << endl;
+    char x; int y;
+    while (cin >> x >> y){
         if (x == 'I') cout << Rb.insert(y) << endl;
         else if (x == 'D') cout << Rb.remove(y) << endl;
         else if (x == 'S') cout << Rb.kth_element(y) << endl;
         else cout << Rb.rank(y) << endl;
     }
-
 } // namespace std;
 
