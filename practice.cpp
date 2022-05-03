@@ -1,27 +1,31 @@
-#include <bits/stdc++.h>
-#define fastio ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-
+#include <iostream>
+#include <unordered_map>
 using namespace std;
-
-vector<int> counting_sort(vector<int> &arr){
-    int *C = new int[2000001];
-    for (int i=0; i<arr.size(); ++i) C[arr[i]>=0? arr[i] : 2000001-arr[i]]++;
-    for (int i=-999999; i<=1000000; ++i) {
-        int x = i >= 0? i : 2000001+i;
-        C[x] += C[x ? x-1 : 2000001];
-    } 
-    vector<int> ret(arr.size());
-    for (int i=0; i<arr.size(); ++i) ret[C[arr[i]>=0? arr[i] : 2000001+arr[i]]-1] = arr[i], C[arr[i]>=0? arr[i] : arr[i]+2000001]--;
-    delete[] C;
-    return ret;
-}
-
-
-int main(){
-    fastio
-    int n; cin >> n;
-    vector<int> p(n);
-    for (int i=0; i<n; ++i) cin >> p[i];
-    p = counting_sort(p);
-    for (int i=0; i<p.size(); ++i) cout << p[i] << '\n';
+#define MAX_N 1000
+// 변수 선언
+int n, k;
+int arr[MAX_N];
+unordered_map<int, int> freq;
+int main() {
+    // 입력:
+    cin >> n >> k;
+    int ans = 0;
+    // 각 숫자가 몇 번씩 나왔는지를
+    // hashmap에 기록해줍니다.
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+    // 배열을 앞에서부터 순회하며 쌍을 만들어줍니다.
+    for(int i = 0; i < n; i++) {
+        // 이미 순회한 적이 있는 숫자는 빼 버림으로서
+        // 같은 조합이 여러번 세어지는 걸 방지합니다.
+        for(int j = 0; j < i; j++) {
+            // 전처리를 해주었기 때문에 이미 순회한 적 있는 값은 hashmap에 없습니다.
+            // 이와 같은 방식으로 같은 조합이 중복되어 세어지는 걸 방지할 수 있습니다.
+            if(freq.count(k - arr[i] - arr[j]) > 0)
+                ans += freq[k - arr[i] - arr[j]];
+        }
+        freq[arr[i]]++;
+    }
+    cout << ans;
 }

@@ -51,7 +51,9 @@ struct RedBlackTree{
         Node *x = BST_remove(key);
         if (!x) return 0;
         size--;
-        while (x) x = remove_rebalacing(x);
+        while (x) {
+            x = remove_rebalacing(x);
+        } 
         NIL->p = nullptr;
         return key;
     }
@@ -64,6 +66,21 @@ struct RedBlackTree{
             if (!k--) return x->key;
             x = x->r;
         }
+    }
+
+    int kth_element(int k){
+        return operator[] (k+1);
+    }
+
+    int rank(int key) {
+        Node *x = BST_search(key);
+        if (!x) return -1;
+        int ret = x->r->sz+1;
+        while (x->p){
+            if (x->p->l == x) ret += x->p->r->sz+1;
+            x = x->p;
+        }
+        return ret;
     }
 
     void print(){
@@ -172,27 +189,48 @@ private:
             update(z); z=z->p;
         }
         bool y_color = y->color, m_color = m->color;
+        m->color = BLACK;
         y->l = y->r = nullptr;
         delete y;
-        if (y_color || m_color) return nullptr;
+        if (y_color != m_color) return nullptr;
         return m;
+    }
+
+    Node* BST_search(int key){
+        if (root == NIL) return nullptr;
+        Node *x = root;
+        while (1){
+            if (key == x->key) return x;
+            if (key < x->key) {
+                if (x->l == NIL) return nullptr;
+                x = x->l;
+            } else {
+                if (x->r == NIL) return nullptr;
+                x = x->r;
+            }
+        }
     }
 
     Node* remove_rebalacing(Node *x){
         Node *p = x->p;
         if (!p) return nullptr;
-        Node *s = p->l==x? p->r : p->l;
+        bool isLeft = p->l==x;
+        Node *s = isLeft? p->r : p->l;
         if (s->color == RED) {
             rotate(s), swap(s->color, p->color);
-            s = p->l==x? p->r : p->l;
+            s = isLeft? p->r : p->l;
         }
         Node *l = s->l, *r = s->r;
+        if (!isLeft) swap(l, r);
         if (l->color == BLACK && r->color == BLACK) {
-            s->color = RED; return p;
+            bool p_color = p->color;
+            p->color = BLACK;
+            s->color = RED; 
+            return p_color == RED? nullptr : p;
         }
         if (l->color == RED && r->color == BLACK){
             rotate(l); swap(l->color, s->color);
-            l = s; s = r;
+            r = s, s = l;
         }
         rotate(s);
         swap(s->color, p->color);
@@ -219,7 +257,7 @@ private:
     void print(Node *x){
         if (x == NIL) return;
         print(x->l);
-        cout << x->key << "  ";
+        cout << x->key << " ";
         print(x->r);
     }
 
@@ -240,15 +278,17 @@ private:
 int main()
 {
     RedBlackTree Rb;
-    set<int> s;
-    for (int i=1; i<=20; ++i) {
-        int x = rand()%100;
-        cout << x << ' ';
-        Rb.insert(x);
+
+    int n; cin >> n;
+    while (n--){
+        char x; int y;
+        cin >> x >> y;
+        cout << x << ' ' << y << ' ' << Rb.size << endl;
+        if (x == 'I') cout << Rb.insert(y) << endl;
+        else if (x == 'D') cout << Rb.remove(y) << endl;
+        else if (x == 'S') cout << Rb.kth_element(y) << endl;
+        else cout << Rb.rank(y) << endl;
     }
 
-    Rb.remove(36);
-    Rb.remove(62);
-    cout << endl; 
-    Rb.print_structure();
 } // namespace std;
+
