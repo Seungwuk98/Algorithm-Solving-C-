@@ -1,12 +1,14 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+
+/**************** 색 정의 ****************/
 const bool RED = 1;
 const bool BLACK = 0;
+/**************** 색 정의 ****************/
 
 struct Node
 {
-    
     int sz, key;
     Node *l, *r, *p;
     bool color;
@@ -103,7 +105,6 @@ struct RedBlackTree{
             cout << endl;
         }
     }
-
 private:
     void update(Node *x){
         x->sz = x != NIL;
