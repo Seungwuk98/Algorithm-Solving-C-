@@ -158,10 +158,11 @@ private:
      * 해당 노드가 오른쪽, 왼쪽으로 내려가는 회전이 아닌
      * 노드가 부모를 제치고 올라가는 방식으로 회전을 구현했습니다.
      * 모든 rebalancing 과정은 해당 코드로 진행했습니다.
+     * (x)가 currNode입니다.
      * case 1                          case 2
-     *      p                 x                p                    x                          
+     *      p                (x)               p                   (x)                          
      *     / \               / \              / \                  / \                        
-     *    x   r      ->     l   p            l   x       ->       p   r                   
+     *   (x)  r      ->     l   p            l  (x)      ->       p   r                   
      *   / \                   / \              / \              / \                             
      *  l   t                 t   r            t   r            l   t                
     ***************************************************************************************/
@@ -318,14 +319,14 @@ private:
     *******************************************************************/
     Node* insert_rebalacing(Node *currNode){
         Node *parent = currNode->parent;
-        // 부모가 존재하지 않거나, 그 색이 BLACK이면 더 이상 진행할 필요 없음
+        // 부모가 존재하지 않거나, 그 색이 BLACK이면 더 이상 진행할 필요 없습니다.
         if (!parent || parent->color == BLACK) return nullptr;
-        // 부모가 RED인 경우만 진행하며, 루트는 BLACK이므로 만드시 부모의 부모가 존재
+        // 부모가 RED인 경우만 진행하며, 루트는 BLACK이므로 만드시 부모의 부모가 존재합니다.
         Node *grandp = parent->parent, *sibling = grandp->left==parent? grandp->right : grandp->left;
         if (sibling->color == RED) {
         // case 1 : sibling이 RED인 경우 parent와 sibling을 BLACK으로 바꾸고
-        //          부모의 부모의 색을 루트면 BLACK 아니면 RED로 바꾼다.
-        //          이 경우 부모의 부모는 같은 문제를 가지므로 그것을 리턴
+        //          부모의 부모의 색을 루트면 BLACK 아니면 RED로 바꿉니다.
+        //          이 경우 부모의 부모는 같은 문제를 가지므로 그것을 리턴합니다.
             parent->color = sibling->color = BLACK;
             grandp->color = grandp==root? BLACK : RED;
             return grandp;
@@ -425,6 +426,44 @@ void checker_program(vector<pair<char, int>> &Q, vector<int> &result) {
 /************************************************************************************/
 /**********************************체커 프로그램*************************************/
 
+/**********************************체커 프로그램2*************************************/
+/************************************************************************************/
+// #define all(v) v.begin(), v.end()
+// void checker_program2(vector<pair<char, int>> &Q, vector<int> &result){
+//     ofstream cout_checker;
+//     cout_checker.open("checker.txt");
+//     vector<int> check;
+//     char op; int x, y;
+//     for (int i=0; i<Q.size(); ++i) {
+//         tie(op, x) = Q[i];
+//         if (op == 'I') {
+//             if (find(all(check), x) == check.end()) {
+//                 int j = lower_bound(all(check), x) - check.begin();
+//                 check.insert(check.begin()+j, x);
+//                 y = x;
+//             } else y = 0;
+//         } else if (op == 'D') {
+//             auto iter = find(all(check), x);
+//             if (iter != check.end()) {
+//                 check.erase(iter);
+//                 y = x;
+//             } else y = 0;
+//         } else if (op == 'S') {
+//             if (1<=x && x<=check.size()) y = check[x-1];
+//             else y = 0;
+//         } else {
+//             int j = lower_bound(all(check), x) - check.begin();
+//             if (j >= check.size() || check[j] != x) y = 0;
+//             else y = j+1;
+//         }
+//         cout_checker << (result[i] == y) << '\n';
+//     }
+
+
+// }
+/************************************************************************************/
+/**********************************체커 프로그램2*************************************/
+
 
 int main()
 {
@@ -433,7 +472,6 @@ int main()
     cin_input.open("input.txt");
     ofstream cout_output;
     cout_output.open("output.txt");
-    ofstream cout_checker;
     cin_input.tie(0); ios_base::sync_with_stdio(0);
     /**************** 입출력 설정 ***************/
 
@@ -463,6 +501,7 @@ int main()
 
     /**************** Checker program *****************/
     checker_program(Q, result);
+    // checker_program2(Q, result);
     /**************** Checker program *****************/
 
 } // namespace std;

@@ -100,7 +100,7 @@ struct RedBlackTree{
         int cnt = 0;
         print_structure(root, cnt, 0, ret);
         for (auto x : ret) {
-            for (auto y : x) if (y == "") cout << "     ";
+            for (auto y : x) if (y == "") cout << "    ";
             else cout << y << ' ';
             cout << endl;
         }
@@ -276,7 +276,7 @@ private:
     void print_structure(Node *x, int &cnt, int dep, vector<vector<string>> &ret){
         if (x==NIL) return;
         print_structure(x->l, cnt, dep+1, ret);
-        ret[dep][cnt++] = to_string(x->key) +"-"+ (x->color == RED? "R" : "B") + to_string(x->sz);
+        ret[dep][cnt++] = to_string(x->key) +"-"+ (x->color == RED? "R" : "B");
         print_structure(x->r, cnt, dep+1, ret);
     }
 };
@@ -291,6 +291,8 @@ int main()
         else if (x == 'D') cout << Rb.remove(y) << endl;
         else if (x == 'S') cout << Rb.kth_element(y) << endl;
         else cout << Rb.rank(y) << endl;
+        cout << x << ' ' << y << ' ' << endl;
+        Rb.print_structure();
     }
 } // namespace std;
 
