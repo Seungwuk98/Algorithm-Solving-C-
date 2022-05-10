@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
-#define INF 2147483647
+#define MINF -2147483648LL
+#define INF 2147483647LL
 using namespace std;
-
+using ll = long long;
 struct Node{
     int cnt;
     Node *l, *r;
@@ -27,7 +28,7 @@ struct Segtree
         tree = new Node();
     }
 
-    void update(Node *x, int w, int s=-INF-1, int e=INF){
+    void update(Node *x, int w, ll s=MINF, ll e=INF){
         if (s==e){
             x->cnt++; return;
         }
@@ -42,7 +43,7 @@ struct Segtree
         x->cnt = (x->l? x->l->cnt:0) + (x->r? x->r->cnt:0);
     }
 
-    int query(Node *x, int k, int s=-INF-1, int e=INF){
+    int query(Node *x, int k, ll s=MINF, ll e=INF){
         if (s==e) return s;
         int mid = s+e>>1;
         int diff = x->l? x->l->cnt : 0;

@@ -4,10 +4,11 @@ using namespace std;
 
 int main()
 {
-	for (int i=0; i<20; ++i) {
-		cout << 'I' << ' ' << rand()%23 << endl;
+	bool isprime[1000001];
+	fill(&isprime[0], &isprime[1000001], 1);
+	isprime[0] = isprime[1] = 0;
+	for (int i=2; i<=1000; ++i) if (isprime[i]) for (int j=i*i; j<=1000000; j+=i) isprime[j] = 0;
+	for (int i=0; i<=1000000; ++i) {
+		if (isprime[i]) cout << i << endl;
 	}
-	for (int i=0; i<10; ++i) cout << 'D' << ' ' << rand()%23 << endl;
-	for (int i=0; i<5; ++i) cout << 'S' << ' ' << rand()%23 << endl;
-	for (int i=0; i<5; ++i) cout << 'R' << ' ' << rand()%23 << endl;
 } // namespace std;

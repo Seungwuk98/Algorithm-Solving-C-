@@ -5,6 +5,9 @@
         "new": "cpp",
         "ostream": "cpp",
         "iostream": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "tuple": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp"
     }
 }

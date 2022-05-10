@@ -1,12 +1,12 @@
 {
-    "version": "2.0.0",
-    "runner": "terminal",
-    "type": "shell",
-    "echoCommand": true,
-    "presentation": {
-        "reveal": "always"
-    },
-    "tasks": [
+	"version": "2.0.0",
+	"runner": "terminal",
+	"type": "shell",
+	"echoCommand": true,
+	"presentation": {
+		"reveal": "always"
+	},
+	"tasks": [
 		{
 			"label": "save and compile for C++",
 			"command": "g++",
@@ -117,6 +117,7 @@
 			"label": "C/C++: gcc.exe 활성 파일 빌드",
 			"command": "C:\\MinGW\\bin\\gcc.exe",
 			"args": [
+				"-std=c++17",
 				"-g",
 				"${file}",
 				"-o",
