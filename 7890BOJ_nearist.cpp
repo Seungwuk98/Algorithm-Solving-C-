@@ -3,123 +3,116 @@
 
 using namespace std;
 using ll = long long;
-const ll INF = 1LL<<60;
+const ll INF = 5e18;
 
-struct point
+
+struct P
 {
     ll x, y, xmn, xmx, ymn, ymx;
     int i;
-    point(int x, int y) : x(x), y(y) {}
-    point() {
+    P() {
         xmn = ymn = INF;
         xmx = ymx = -INF;
     }
-    bool operator == (const point &other) const {
+    bool operator == (const P &other) const {
         return x == other.x && y == other.y;
     }
-    bool operator != (const point &other) const {
-        return x != other.x || y != other.y;
+    bool operator != (const P &other) const {
+        return !operator==(other);
     }
-    bool operator < (const point &other) const {
-        if (x != other.x) return x < other.x;
-        return y < other.y;
-    }
-};
+} point[1<<17];
 
-bool xcomp(const point &a, const point &b) {
+P tree[1<<18];
+bool ext[1<<18];
+int n;
+
+ll sq(ll x) { return x*x;}
+ll dist(const P &a, const P &b) { return sq(b.x-a.x) + sq(b.y-a.y);}
+bool xcomp(const P &a, const P &b) {
     if (a.x != b.x) return a.x < b.x;
     return a.y < b.y;
 }
 
-bool ycomp(const point &a, const point &b) {
+bool ycomp(const P &a, const P &b) {
     if (a.y != b.y) return a.y < b.y;
     return a.x < b.x;
 }
 
-ll point_to_point(const point &a, const point &b) {
-    return (b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y);
-}
-
-int n;
-point P[1<<17];
-point save[1<<17];
-point tree[1<<18];
-bool ext[1<<18];
-inline ll sq(ll x) {return x*x;}
-
-#define lx x<<1
-#define rx x<<1|1
-
-void make_tree(int i, int j, int dep, int x=1) {
-    int mid = i + j >> 1;
-    if (dep&1) sort(P+i, P+j+1, ycomp);
-    else sort(P+i, P+j+1, xcomp);
-    tree[x] = P[mid];
+void maketree(int l, int r, int st, int x=1) {
+    if (st) sort(point+l, point+r+1, ycomp);
+    else sort(point+l, point+r+1, xcomp);
+    int mid = l + r >> 1;
+    tree[x] = point[mid];
     ext[x] = 1;
-    if (i <= mid-1) make_tree(i, mid-1, dep+1, lx);
-    if (j >= mid+1) make_tree(mid+1, j, dep+1, rx);
-    tree[x].xmn = min({tree[lx].xmn, tree[rx].xmn, tree[x].x});
-    tree[x].xmx = max({tree[lx].xmx, tree[rx].xmx, tree[x].x});
-    tree[x].ymn = min({tree[lx].ymn, tree[rx].ymn, tree[x].y});
-    tree[x].ymx = max({tree[lx].ymx, tree[rx].ymx, tree[x].y});
+    if (l <= mid-1) maketree(l, mid-1, st^1, x<<1);
+    if (r >= mid+1) maketree(mid+1, r, st^1, x<<1|1);
+    tree[x].xmn = tree[x].xmx = tree[x].x;
+    tree[x].ymn = tree[x].ymx = tree[x].y;
+    if (ext[x*2]) {
+        tree[x].xmn = min(tree[x].xmn, tree[x*2].xmn);
+        tree[x].xmx = max(tree[x].xmx, tree[x*2].xmx);
+        tree[x].ymn = min(tree[x].ymn, tree[x*2].ymn);
+        tree[x].ymx = max(tree[x].ymx, tree[x*2].ymx);
+    }
+    if (ext[x*2+1]) {
+        tree[x].xmn = min(tree[x].xmn, tree[x*2+1].xmn);
+        tree[x].xmx = max(tree[x].xmx, tree[x*2+1].xmx);
+        tree[x].ymn = min(tree[x].ymn, tree[x*2+1].ymn);
+        tree[x].ymx = max(tree[x].ymx, tree[x*2+1].ymx);
+    }
 }
 
-void getans(point &now, int dep, ll &ans, int x=1) {
-    if (now != tree[x]) {
-        ans = min(ans, point_to_point(now, tree[x]));
-    }
+ll ans[101010];
 
-    if (dep & 1) {
+void getans(P &now, int st, int x=1) {
+    if (now!=tree[x]) {
+        ll d = dist(now, tree[x]);
+        ans[now.i] = min(ans[now.i], d);
+        ans[tree[x].i] = min(ans[tree[x].i], d);
+    } 
+    if (st) {
         if (now.y < tree[x].y) {
-            if (ext[lx]) getans(now, dep+1, ans, lx);
-            if (ext[rx] && ans > sq(tree[rx].ymn - now.y)) getans(now, dep+1, ans, rx);
+            if (ext[x<<1]) getans(now, st^1, x<<1);
+            if (ext[x<<1|1] && sq(tree[x<<1|1].ymn - now.y) < ans[now.i]) getans(now, st^1, x<<1|1);
         } else {
-            if (ext[lx] && ans > sq(now.y - tree[lx].ymx)) getans(now, dep+1, ans, lx);
-            if (ext[rx]) getans(now, dep+1, ans, rx);
+            if (ext[x<<1] && sq(tree[x<<1].ymx - now.y) < ans[now.i]) getans(now, st^1, x<<1);
+            if (ext[x<<1|1]) getans(now, st^1, x<<1|1);
         }
     } else {
         if (now.x < tree[x].x) {
-            if (ext[lx]) getans(now, dep+1, ans, lx);
-            if (ext[rx] && ans > sq(tree[rx].xmn - now.x)) getans(now, dep+1, ans, rx);
+            if (ext[x<<1]) getans(now, st^1, x<<1);
+            if (ext[x<<1|1] && sq(tree[x<<1|1].xmn - now.x) < ans[now.i]) getans(now, st^1, x<<1|1);
         } else {
-            if (ext[lx] && ans > sq(now.x - tree[lx].xmx)) getans(now, dep+1, ans, lx);
-            if (ext[rx]) getans(now, dep+1, ans, rx);
+            if (ext[x<<1] && sq(tree[x<<1].xmx - now.x) < ans[now.i]) getans(now, st^1, x<<1);
+            if (ext[x<<1|1]) getans(now, st^1, x<<1|1);
         }
     }
 }
+
 
 
 int main()
 {
+    fastio
     int T; cin >> T;
-    while (T--){
-        memset(ext, 0, sizeof(ext));
+    while (T--) {
         cin >> n;
-        vector<point> tmp;
+        memset(ext, 0, sizeof(ext));
+        fill(&ans[0], &ans[n], INF);
         for (int i=0; i<n; ++i) {
-            point w;
-            cin >> w.x >> w.y;
-            w.i = i;
-            tmp.push_back(w);
-            save[i] = w;
-        } 
-        sort(tmp.begin(), tmp.end(), xcomp);
-        vector<point> tmp2;
-        P[0] = tmp[0];
-        int t = 1;
-        for (int i=1; i<n; i++) {
-            if (tmp[i] != tmp[i-1]) P[t++] = tmp[i];
-            else tmp2.push_back(tmp[i]);
+            cin >> point[i].x >> point[i].y;
+            point[i].i = i;
         }
-        make_tree(0, t-1, 0);
-        for (int i=0; i<n; ++i) {
-            if (!tmp2.empty() && *lower_bound(tmp2.begin(), tmp2.end(), save[i]) == save[i]) {
-                cout << 0 << '\n';
-            } else {
-                ll ret = INF;
-                getans(P[i], 0, ret);
-                cout << ret << '\n';
-            }
+        sort(point, point+n, xcomp);
+        int t = 0;
+        for (int i=0, j=0; i<n; i=j) {
+            while (j<n && point[i]==point[j]) j++;
+            if (i+1 == j) swap(point[t++], point[i]);
         }
+        maketree(0, t-1, 0);
+        for (int i=0; i<t; ++i) {
+            getans(point[i], 0);
+        }
+        for (int i=0; i<n; ++i) cout << (ans[i] == INF ? 0 : ans[i]) << '\n';
     }
 } // namespace std;

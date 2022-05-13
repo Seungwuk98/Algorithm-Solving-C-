@@ -48,7 +48,8 @@ struct Node
     }
 
     void set(ll x) {
-        lmx = rmx = mx = sm = x;
+        sm = x;
+        lmx = rmx = mx = max(x,0LL);
     }
 };
 
@@ -75,15 +76,19 @@ void build(){
 }
 
 void update(int i, ll z) {
-    tree[i|=HF] = z;
+    if (tree[i|HF].mx == z) return;
+    tree[i|=HF].set(z);
     while (i>>=1) tree[i] = merge(tree[i<<1], tree[i<<1|1]);
 }
 
 
-void swap_seg(int i, int j) {
-    swap(tree[i|=HF], tree[j|=HF]);
-    while (i>>=1) tree[i] = merge(tree[i<<1], tree[i<<1|1]);
-    while (j>>=1) tree[j] = merge(tree[j<<1], tree[j<<1|1]);
+void give_swap(int i, int j) {
+    if (tree[i|HF].mx) {
+        tree[j|HF].set(tree[j|HF].sm + tree[i|HF].sm);
+        tree[i|HF].set(0);
+        while (i>>=1) tree[i] = merge(tree[i<<1], tree[i<<1|1]);
+        while (j>>=1) tree[j] = merge(tree[j<<1], tree[j<<1|1]);
+    }
 }
 
 
@@ -105,12 +110,18 @@ int main()
     ll mx = tree[1].mx;
     for (int i=0, j=0; i<l.size(); i=j){
         while (j<l.size() && l[i] == l[j]) j++;
+        int a, b;
         for (int k=i; k<j; ++k) {
-            int a, b;
             a = l[k].i; b = l[k].j;
+            give_swap(pos[a], pos[b]);
             swap(pos[a], pos[b]);
-            swap_seg(pos[a], pos[b]);
-            mx = max(tree[1].mx, mx);
+            swap(p[pos[a]], p[pos[b]]);
+        }
+        mx = max(mx, tree[1].mx);
+        for (int k=i; k<j; ++k) {
+            a = l[k].i; b = l[k].j;
+            update(pos[a], p[pos[a]].w);
+            update(pos[b], p[pos[b]].w);
         }
     }
     cout << mx;

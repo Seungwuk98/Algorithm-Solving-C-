@@ -1,7 +1,25 @@
 #include <bits/stdc++.h>
+#define fastio ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+
 using namespace std;
 
-typedef pair<long long,long long> P;
+
+struct P{
+	long long first, second;
+	int i;
+	bool operator < (const P &other) const {
+		if (first != other.first) return first < other.first;
+		return second < other.second;
+	}
+
+	bool operator == (const P &other) const {
+		return first == other.first && second == other.second;
+	}
+
+	bool operator != (const P &other) const {
+		return !operator==(other);
+	}
+};
 
 struct Node {
 	P pt;
@@ -32,19 +50,40 @@ bool ycomp(P a,P b) {
 	return a.second<b.second;
 }
 
-void make_tree(int i, int j, int dep, int x=1) {
-    int mid = i + j >> 1;
-    if (dep&1) sort(point+i, point+j+1, ycomp);
-    else sort(point+i, point+j+1, xcomp);
-    kdtree[x] = point[mid];
-    kdtree[x].st = dep&1;
-    ext[x] = 1;
-    if (i <= mid-1) make_tree(i, mid-1, dep+1, lx);
-    if (j >= mid+1) make_tree(mid+1, j, dep+1, rx);
-    kdtree[x].xmn = min({kdtree[lx].xmn, kdtree[rx].xmn, kdtree[x].x});
-    kdtree[x].xmx = max({kdtree[lx].xmx, kdtree[rx].xmx, kdtree[x].x});
-    kdtree[x].ymn = min({kdtree[lx].ymn, kdtree[rx].ymn, kdtree[x].y});
-    kdtree[x].ymx = max({kdtree[lx].ymx, kdtree[rx].ymx, kdtree[x].y});
+void maketree(int l,int r,int ind) {
+	isexist[ind]=true;
+	if (ind==1) {
+		kdtree[ind].st=false; 
+	}
+	else {
+		kdtree[ind].st=!kdtree[ind/2].st; 
+	}
+	if (kdtree[ind].st) {
+		sort(point+l,point+r+1,ycomp); 
+	}
+	else {
+		sort(point+l,point+r+1,xcomp);
+	}
+	int mid=(l+r)/2;
+	kdtree[ind].pt=point[mid];  
+    kdtree[ind].sx = kdtree[ind].ex = point[mid].first;
+    kdtree[ind].sy = kdtree[ind].ey = point[mid].second;
+	if (l<=mid-1)   
+	    maketree(l,mid-1,ind*2);
+	if (mid+1<=r)    
+	    maketree(mid+1,r,ind*2+1);
+    if (isexist[ind*2]) {
+        kdtree[ind].sx = min(kdtree[ind].sx, kdtree[ind*2].sx);
+        kdtree[ind].ex = max(kdtree[ind].ex, kdtree[ind*2].ex);
+        kdtree[ind].sy = min(kdtree[ind].sy, kdtree[ind*2].sy);
+        kdtree[ind].ey = max(kdtree[ind].ey, kdtree[ind*2].ey);
+    }
+    if (isexist[ind*2+1]) {
+        kdtree[ind].sx = min(kdtree[ind].sx, kdtree[ind*2+1].sx);
+        kdtree[ind].ex = max(kdtree[ind].ex, kdtree[ind*2+1].ex);
+        kdtree[ind].sy = min(kdtree[ind].sy, kdtree[ind*2+1].sy);
+        kdtree[ind].ey = max(kdtree[ind].ey, kdtree[ind*2+1].ey);
+    }
 }
 
 void getans(int ind,P now) {
@@ -89,43 +128,29 @@ void getans(int ind,P now) {
 		}
 	}
 }
-
-int main(void) {
-	int tc;
-	scanf("%d\n",&tc);
-	for(int t=0;t<tc;t++) {
-		memset(isexist,0,sizeof(isexist));
-		int n;
-		scanf("%d\n",&n);
-        vector<P> temp;
-		for(int i=0;i<n;i++) {
-			int x,y;
-			scanf("%d %d\n",&x,&y);
-			temp.push_back({x,y});
-			save[i]=temp[i];
+int main()
+{
+	fastio
+    int T; cin >> T;
+    while (T--) {
+        cin >> n;
+        memset(isexist, 0, sizeof(isexist));
+        for (int i=0; i<n; ++i) {
+            cin >> point[i].first >> point[i].second;
+            point[i].i = i;
+        }
+        sort(point, point+n, xcomp);
+        int t = 1;
+        for (int i=1; i<n; ++i) if (point[i-1] != point[i]) {
+			swap(point[t++], point[i]);
 		}
-		sort(temp.begin(),temp.end(),xcomp);
-        vector<P> two;
-		point[0]=temp[0];
-		int cnt=1;
-		for(int i=1;i<temp.size();i++) {
-		    if (temp[i-1]!=temp[i]) {
-		        point[cnt++]=temp[i];
-		    }
-            else {
-                two.push_back(temp[i]);
-            }
-		}
-		maketree(0,cnt-1,0);
-		for(int i=0;i<n;i++) {
-            if (!two.empty()&&*lower_bound(two.begin(),two.end(),save[i])==save[i]) {
-                printf("0\n");
-            }
-            else {
-			    ret=5e18; 
-			    getans(1,save[i]);
-			    printf("%lld\n",ret);
-            }
-		}
-	}
-}
+        maketree(0, t-1, 1);
+        vector<long long> ans(n);
+        for (int i=0; i<t; ++i) {
+            ret = 5e18;
+            getans(1, point[i]);
+            ans[point[i].i] = ret;
+        }
+        for (int i=0; i<n; ++i) cout << ans[i] << '\n';
+    }
+} // namespace std;
