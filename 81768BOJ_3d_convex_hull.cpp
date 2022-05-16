@@ -38,17 +38,6 @@ struct vec3
     }
 };
 
-struct vec2
-{
-    ld x, y;
-    vec2(){}
-    vec2(ld x, ld y) : x(x), y(y) {}
-    friend ostream& operator << (ostream &out, const vec2 &v) {
-        out << v.x << ' ' << v.y;
-        return out;
-    }
-};
-
 
 struct matrix
 {
@@ -82,36 +71,36 @@ struct matrix
 
 
 
-ld get_angle(vec3 hat, vec3 &p) {
-    return acos((hat * p)/((~hat) * (~p)));
-}
+// ld get_angle(vec3 hat, vec3 &p) {
+//     return acos((hat * p)/((~hat) * (~p)));
+// }
 
-ld get_theta(vec3 hat, vec3 &p) {
-    ld theta = get_angle(hat, p);
-    return p.y < 0 ? PI-theta : theta;
-}
+// ld get_theta(vec3 hat, vec3 &p) {
+//     ld theta = get_angle(hat, p);
+//     return p.y < 0 ? PI-theta : theta;
+// }
 
-matrix rotate_matrix(vec3 v) {
-    if (v.x == 0 && v.y == 0) {
-        matrix ret;
-        ret.table[0][0] = ret.table[1][1] = ret.table[2][2] = 1;
-        return ret;
-    }
-    vec3 xy(v.x, v.y, 0);
-    ld theta = get_theta(vec3(1,0,0), xy);
-    ld mat_xy[3][3] = {
-        {cosl(theta), sinl(theta), 0L},
-        {-sinl(theta), cosl(theta), 0L},
-        {0, 0, 1}
-    };
-    ld phi = get_angle(vec3(0,0,1), v);
-    ld mat_y[3][3] = {
-        {cosl(phi), 0, -sinl(phi)},
-        {0, 1, 0},
-        {sinl(phi), 0, cosl(phi)}
-    };
-    return matrix(mat_y) * matrix(mat_xy);
-}
+// matrix rotate_matrix(vec3 v) {
+//     if (v.x == 0 && v.y == 0) {
+//         matrix ret;
+//         ret.table[0][0] = ret.table[1][1] = ret.table[2][2] = 1;
+//         return ret;
+//     }
+//     vec3 xy(v.x, v.y, 0);
+//     ld theta = get_theta(vec3(1,0,0), xy);
+//     ld mat_xy[3][3] = {
+//         {cosl(theta), sinl(theta), 0L},
+//         {-sinl(theta), cosl(theta), 0L},
+//         {0, 0, 1}
+//     };
+//     ld phi = get_angle(vec3(0,0,1), v);
+//     ld mat_y[3][3] = {
+//         {cosl(phi), 0, -sinl(phi)},
+//         {0, 1, 0},
+//         {sinl(phi), 0, cosl(phi)}
+//     };
+//     return matrix(mat_y) * matrix(mat_xy);
+// }
 
 struct face
 {
@@ -148,13 +137,13 @@ vector<vec3> intersection_points(const plane &p, const face &f, vector<vec3> &pt
     ld vB = plane_value(pts[f.b]);
     ld vC = plane_value(pts[f.c]);
     vector<vec3> ret;
-    if (vA * vB < 0) {
+    if (vA * vB <= 0) {
         ret.push_back(intersection_point(p, line(pts[f.a], pts[f.a]-pts[f.b])));
     }
-    if (vB * vC < 0) {
+    if (vB * vC <= 0) {
         ret.push_back(intersection_point(p, line(pts[f.b], pts[f.b]-pts[f.c])));
     }
-    if (vC * vA < 0) {
+    if (vC * vA <= 0) {
         ret.push_back(intersection_point(p, line(pts[f.c], pts[f.c]-pts[f.a])));
     }
     return ret;
@@ -165,9 +154,6 @@ vector<vec3> all_inter_points(const plane &p, vector<face> &hull, vector<vec3> &
     auto plane_value = [&](vec3 &A) {
         return p.normal * A + p.d;
     };
-    for (auto pt : pts) {
-        if (abs(plane_value(pt)) < EPS) ret.push_back(pt);
-    }
     for (auto f : hull) {
         vector<vec3> tmp = intersection_points(p, f, pts);
         ret.insert(ret.end(), all(tmp));
@@ -175,16 +161,16 @@ vector<vec3> all_inter_points(const plane &p, vector<face> &hull, vector<vec3> &
     return ret;
 }
 
-vector<vec2> rotate_all_points(const plane &p, vector<vec3> &points) {
-    matrix RM = rotate_matrix(p.normal);
-    vector<vec2> ret;
-    for (int i=0; i<points.size(); ++i) {
-        points[i].z -= p.d;
-        points[i] = RM * points[i];
-        ret.emplace_back(points[i].x, points[i].y);
-    }
-    return ret;
-}
+// vector<vec2> rotate_all_points(const plane &p, vector<vec3> &points) {
+//     matrix RM = rotate_matrix(p.normal);
+//     vector<vec2> ret;
+//     for (int i=0; i<points.size(); ++i) {
+//         points[i].z -= p.d;
+//         points[i] = RM * points[i];
+//         ret.emplace_back(points[i].x, points[i].y);
+//     }
+//     return ret;
+// }
 
 
 vector<face> hull3(const vector<vec3> &p) {
