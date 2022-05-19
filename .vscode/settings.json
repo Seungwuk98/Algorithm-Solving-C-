@@ -70,6 +70,7 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "stdio.h": "c"
     }
 }
