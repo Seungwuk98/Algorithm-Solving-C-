@@ -52,9 +52,9 @@
                 "&&",
                 "${fileDirname}/${fileBasenameNoExtension}.out",
                 "<",
-                "${fileDirname}/input.txt",
+                "input.txt",
                 ">",
-                "${fileDirname}/output.txt"
+                "output.txt"
             ],
             "group": "build",
             "problemMatcher": {
