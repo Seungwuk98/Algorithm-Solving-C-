@@ -74,8 +74,6 @@ int main(int argc, const char * argv[]) {
     fft(a);
     fft(b);
     fft(c);
-	for (auto x : a) cout << x << ' ';
-	cout << endl;
     pw.resize(1 << 18);
     pw[0] = 1;
     for(int i = 1; i < (1 << 18); i++)
