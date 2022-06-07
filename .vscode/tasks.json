@@ -124,7 +124,6 @@
             "label": "C/C++: gcc.exe 활성 파일 빌드",
             "command": "C:\\MinGW\\bin\\gcc.exe",
             "args": [
-                "-std=c++17",
                 "-g",
                 "${file}",
                 "-o",

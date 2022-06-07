@@ -469,9 +469,9 @@ int main()
 {
     /**************** 입출력 설정 ***************/
     ifstream cin_input;
-    cin_input.open("input.txt");
+    cin_input.open("input_9.txt");
     ofstream cout_output;
-    cout_output.open("output.txt");
+    cout_output.open("output_9.txt");
     cin_input.tie(0); ios_base::sync_with_stdio(0);
     /**************** 입출력 설정 ***************/
 
