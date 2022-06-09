@@ -1,6 +1,0 @@
-size :  0, firstVal :  0, allVals: END
-size :  1, firstVal :  10, allVals: 10->END
-size :  2, firstVal :  20, allVals: 20->10->END
-size :  3, firstVal :  30, allVals: 30->20->10->END
-size :  3, firstVal :  30, allVals: 30->10->END
-size :  3, firstVal :  10, allVals: 10->END
