@@ -1,96 +1,84 @@
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct nodeType LinkedNode;
-struct nodeType
+
+typedef struct sll_t linkedlist; 
+typedef struct node_t node; 
+
+
+struct node_t
 {
-    int val;
-    LinkedNode *next;
+    node *next;
+    int data;
 };
-LinkedNode *createNode(int x)
+
+struct sll_t
 {
-    LinkedNode *newNode;
-    newNode = (LinkedNode *)malloc(sizeof(LinkedNode));
-    newNode->val = x;
-    newNode->next = NULL;
-    return newNode;
-}
-typedef struct listType SLList;
-struct listType
-{
-    LinkedNode *first;
+    node *top;
     int size;
 };
 
-void addFirst(SLList *LL, int x)
-{
-    LinkedNode *newFirst;
-    newFirst = createNode(x);
-    newFirst->next = LL->first;
-    LL->first = newFirst;
-    LL->size++;
-}
-int getFirst(SLList *LL)
-{
-    if (LL->first != NULL)
-        return LL->first->val;
-    return 0;
-}
-int getSize(SLList *LL)
-{
-    return LL->size;
-}
-void printSLList(SLList *LL)
-{
-    LinkedNode *curr = LL->first;
-    printf("size : % d, firstVal : % d, allVals: ", getSize(LL), getFirst(LL));
-    while (curr != NULL)
-    {
-        printf("%d->", curr->val);
-        curr = curr->next;
-    }
-    printf("END\n");
+node *create_node(int data) {
+    node *ret = (node *)malloc(sizeof(node));
+    ret->next = NULL;
+    ret->data = data;
+    return ret;
 }
 
-void deleteNode(SLList *LL, int val)
-{
-    LinkedNode *curr = LL->first, *prev = NULL;
-    while (curr)
-    {
-        if (curr->val == val)
-        {
-            if (!prev)
-            {
-                LL->first = curr->next;
-            }
-            else
-            {
+linkedlist *create_ll() {
+    linkedlist *ll = (linkedlist *)malloc(sizeof(linkedlist));
+    ll->size = 0;
+    ll->top = NULL;
+    return ll;
+}
+
+void add_node(linkedlist *ll, int data) {
+    node *new_node = create_node(data);
+    node *curr = ll->top;
+    if (curr) {
+        while (curr->next) curr = curr->next;
+        curr->next = new_node;
+    } else {
+        ll->top = new_node;
+    }
+    ll->size++;
+}
+
+void printll(linkedlist *ll) {
+    node *curr = ll->top;
+    for (int i=0; i<ll->size; ++i, curr=curr->next) {
+        printf("-%d",curr->data);
+    }    
+}
+
+void delete_node(linkedlist *ll, int data) {
+    node *curr = ll->top, *prev = NULL;
+    while (curr) {
+        if (curr->data == data) {
+            ll->size--;
+            if (prev) {
                 prev->next = curr->next;
+            } else {
+                ll->top = curr->next;
             }
             free(curr);
-            return;
+            break;
         }
         prev = curr;
         curr = curr->next;
     }
 }
 
+
 int main()
 {
-    SLList myLL = {NULL, 0};
-    printSLList(&myLL);
+    linkedlist *ll = create_ll();
+    for (int i=0; i<10; ++i) {
+        add_node(ll, i);
+    }
+    delete_node(ll, 3);
+    delete_node(ll, 4);
+    delete_node(ll, 0);
+    printll(ll);
+} // namespace std;
 
-    addFirst(&myLL, 10);
-    printSLList(&myLL);
 
-    addFirst(&myLL, 20);
-    printSLList(&myLL);
-
-    addFirst(&myLL, 30);
-    printSLList(&myLL);
-
-    deleteNode(&myLL, 20);
-    printSLList(&myLL);
-
-    deleteNode(&myLL, 30);
-    printSLList(&myLL);
-}

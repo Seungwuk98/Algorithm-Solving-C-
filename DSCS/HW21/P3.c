@@ -58,18 +58,38 @@ int main(int argc, char* argv[])
   /* 
    * TODO: Your code starts here
    */	
-  _Bool * vst = (_Bool *) malloc(sizeof(_Bool) * length);
-  for (int i=0; i<length; ++i) parent[i] = 0;
-  prev = NULL;
+  
+  int LLlength = 0;
   curr = head;
   while (curr) {
-    prev = curr;
-    
-    curr = curr.next;
+    LLlength++;
+    curr = curr->next;
+  }
+  _Bool *vst = (_Bool *) malloc(sizeof(_Bool) * LLlength);
+  for (int i=0; i<LLlength; ++i) vst[i] = 0;
+
+  for (int i=0; i<length; ++i) {
+    curr = head;
+    _Bool c = 0;
+    int j = 0;
+    while (curr) {
+      if (curr->data == inputArr[i]) {
+        c = 1; break;
+      } 
+      curr = curr->next;
+      j++;
+    }
+    if (c) vst[j] = 1;
   }
 
-
-
+  for (int i=0, j=0; i<LLlength; i=j) {
+    if (vst[i] == 0) {
+      j = i + 1;
+      continue;
+    } 
+    while (j<LLlength && vst[i] == vst[j]) j++;
+    numConnected++;
+  }
 
 
 	/* 
