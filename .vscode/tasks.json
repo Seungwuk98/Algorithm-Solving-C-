@@ -15,7 +15,6 @@
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}.out",
-                "-std=c++17",
                 "&&",
                 "${fileDirname}/${fileBasenameNoExtension}.out",
                 "<",
