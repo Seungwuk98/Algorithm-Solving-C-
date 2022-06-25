@@ -68,8 +68,9 @@ bool dlx_search(node* head, int k, vector<int>& solution) {
 	return 0;
 }
 
+vector<vector<int>> mat(9);
 
-vector<int> dlx_solve(vector<vector<int>> matrix, vector<vector<int>> &mat) {
+vector<int> dlx_solve(vector<vector<int>> matrix) {
 	int n = matrix[0].size();
 	vector<node> column(n);
 	node head;
@@ -133,43 +134,36 @@ vector<int> dlx_solve(vector<vector<int>> matrix, vector<vector<int>> &mat) {
 }
 
 int main(){
-    while (1){
-        string s; cin >> s;
-        vector<vector<int>> mat(9);
-        for (int i=0; i<9; ++i) {
-            mat[i].resize(9);
-            for (int j=0; j<9; ++j) {
-                if (s[i*9+j]!='.') mat[i][j] = s[i*9+j]-'0';
-            }
-        }
-
-        vector<vector<int>> d;
-        for (int i=0; i<9; ++i){
-            for (int j=0; j<9; ++j){
-                for (int k=0; k<9; ++k){
-                    vector<int> tmp(324);
-                    tmp[i*9+j] = 1;
-                    tmp[81 + i*9+k] = 1;
-                    tmp[162 + j*9+k] = 1;
-                    tmp[243 + (i/3*3+j/3)*9+k] = 1;
-                    d.push_back(tmp);
-                }
-            }
-        }
-        vector<int> sol = dlx_solve(d, mat);
-        for (int x : sol){
-            int r,c,num;
-            r = x/81;
-            c = x%81/9;
-            num = x%81%9;
-            mat[r][c] = num+1;
-        }
-
-        for (int i=0; i<9; ++i){
-            for (int j=0; j<9; ++j) cout << mat[i][j];
-        }
-        cout << '\n';
+    for (int i=0; i<9; ++i) {
+        mat[i].resize(9);
+        for (int j=0; j<9; ++j) cin >> mat[i][j];
     }
-    
+
+    vector<vector<int>> d;
+    for (int i=0; i<9; ++i){
+		for (int j=0; j<9; ++j){
+			for (int k=0; k<9; ++k){
+				vector<int> tmp(324);
+				tmp[i*9+j] = 1;
+				tmp[81 + i*9+k] = 1;
+				tmp[162 + j*9+k] = 1;
+				tmp[243 + (i/3*3+j/3)*9+k] = 1;
+				d.push_back(tmp);
+			}
+		}
+	}
+	vector<int> sol = dlx_solve(d);
+    for (int x : sol){
+        int r,c,num;
+        r = x/81;
+		c = x%81/9;
+		num = x%81%9;
+        mat[r][c] = num+1;
+    }
+
+	for (int i=0; i<9; ++i){
+		for (int j=0; j<9; ++j) cout << mat[i][j] << ' ';
+		cout << '\n';
+	}
 
 }

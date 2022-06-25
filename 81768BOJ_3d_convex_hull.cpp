@@ -1,18 +1,16 @@
 #include <bits/stdc++.h>
-#define PI 3.14159265358979323846264338327950288419716939937510L
 #define fastio ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-#define ll long long
+
 #define sz(x) ((int) (x).size())
 #define all(x) (x).begin(), (x).end()
-#define vi vector<int>
-#define pii pair<int, int>
 #define rep(i, a, b) for(int i = (a); i < (b); i++)
-
 using namespace std;
+template<typename T>
+using minpq = priority_queue<T, vector<T>, greater<T>>;
 
 using ld = long double;
-const ld EPS = 1e-9;
-
+using ll = long long;
+using pii = pair<int, int>;
 
 struct vec3 {
     ld x, y, z;
@@ -20,16 +18,17 @@ struct vec3 {
     vec3 operator-(const vec3 &o) const {
         return vec3(x - o.x, y - o.y, z - o.z);
     }
-    ld operator*(const vec3 &o) const {
-        return x*o.x + y*o.y + z*o.z;
+    vec3 operator+(const vec3 &o) const {
+        return vec3(x + o.x, y + o.y, z + o.z);
+    }
+    vec3 operator*(ld i) const {
+        return vec3(x*i, y*i, z*i);
+    }
+    friend vec3 operator*(int i, const vec3 &o) {
+        return vec3(i*o.x, i*o.y, i*o.z);
     }
     vec3 cross(const vec3 &o) const {
         return vec3(y * o.z - z * o.y, z * o.x - x * o.z, x * o.y - y * o.x);
-    }
-    ld& operator[](int i) {
-        if (i == 0) return x;
-        if (i == 1) return y;
-        return z;
     }
     ld dot(const vec3 &o) const {
         return x * o.x + y * o.y + z * o.z;
@@ -37,18 +36,29 @@ struct vec3 {
     ld abs() const {
         return sqrt(dot(*this));
     }
-    ld operator~() const {
-        return abs();
+    bool operator<(const vec3 &o) const {
+        if (x != o.x) return x < o.x;
+        if (y != o.y) return y < o.y;
+        return z < o.z;
+    }
+    vec3 hat() {
+        ld u = abs();
+        return vec3(x/u, y/u, z/u);
     }
 };
 
 struct edge;
 
+// The implementation becomes more challenging because we need information of adjacent faces.
+// A face will have 3 edges for its adjacent faces
+// e1 corresponds to the edge (a,b), e2 to (b,c), and e3 to (c,a)
+// A face will store a list of future points that can see it.
+// A face will also store "dead" - the index of the point responsible for deleting it (or 1e9 if alive)
 struct face {
     int a, b, c;
     vec3 q;
     edge *e1, *e2, *e3;
-    vi points;
+    vector<int> points;
     int dead = 1e9;
     face(int a, int b, int c, vec3 q) : a(a), b(b), c(c), q(q) {
         e1 = e2 = e3 = NULL;
@@ -72,15 +82,17 @@ void glue(face *F1, face *F2, edge* &e1, edge* &e2) {
     e2->f = F1;
 };
 
+// modify this to your liking
+const ld EPS = 1e-9;
 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 // shuffles the point-set p, making sure the first 4 points are not coplanar.
 // if all points are coplanar, an assertion fails
-void prepare(vector<vec3> &p) {
+bool prepare(vector<vec3> &p) {
     int n = sz(p);
     shuffle(all(p), rng);
-    vi ve;
+    vector<int> ve;
     ve.push_back(0);
     rep(i, 1, n) {
         if(sz(ve) == 1) {
@@ -92,21 +104,20 @@ void prepare(vector<vec3> &p) {
             break;
         }
     }
-    assert(sz(ve) == 4);
+    if (sz(ve) != 4) return false;
     vector<vec3> ve2;
     for(int i : ve) ve2.push_back(p[i]);
     reverse(all(ve));
     for(int i : ve) p.erase(p.begin() + i);
     p.insert(p.begin(), all(ve2));
+    return true;
 }
 
 vector<face*> hull3(vector<vec3> &p) {
     int n = sz(p);
-    prepare(p);
+    bool chk = prepare(p);
     vector<face*> f, new_face(n, NULL);
-
-    // for a point i, conflict[i] is the list of faces it can see.
-    // It might contain faces that were deleted, and we should ignore them
+    if (!chk) return f;
     vector<vector<face*>> conflict(n);
     auto add_face = [&](int a, int b, int c) {
         face *F = new face(a, b, c, (p[b] - p[a]).cross(p[c] - p[a]));
@@ -114,8 +125,6 @@ vector<face*> hull3(vector<vec3> &p) {
         return F;
     };
 
-    // initialize a triangular disk of the first 3 points.
-    // The initial tetrahedron is handled automatically when we insert the 4th point
     face *F1 = add_face(0, 1, 2);
     face *F2 = add_face(0, 2, 1);
     glue(F1, F2, F1->e1, F2->e3);
@@ -125,18 +134,12 @@ vector<face*> hull3(vector<vec3> &p) {
         for(face *F : {F1, F2}) {
             ld Q = (p[i] - p[F->a]).dot(F->q);
             if(Q > EPS) conflict[i].push_back(F);
-            // making this second check is an ugly consequence of starting with a degenerate triangular disk.
-            // We want to make sure each future point is considered visible to some initial face.
             if(Q >= -EPS) F->points.push_back(i);
         }
     }
 
     rep(i, 3, n) {
-        // mark all visible faces as dead
         for(face *F : conflict[i]) F->dead = min(F->dead, i);
-
-        // If a dead face and alive face are adjacent, we have an exposed edge
-        // Vertex v will be a vertex on some exposed edge
         int v = -1;
         for(face *F : conflict[i]) {
             if(F->dead != i) continue;
@@ -147,10 +150,6 @@ vector<face*> hull3(vector<vec3> &p) {
                 if(j2 >= 3) j2 -= 3;
 
                 if(earr[j]->f->dead > i) {
-                    // F is dead and earr[j]->f is alive.
-                    // We should add a new face Fn, attach it to earr[j]->f,
-                    // combine the point lists of the two faces into Fn,
-                    // and store Fn in new_face[parr[j]] so we can glue all the new faces together in a cone.
                     face *Fn = new_face[parr[j]] = add_face(parr[j], parr[j2], i);
                     set_union(all(F->points), all(earr[j]->f->points), back_inserter(Fn->points));
                     Fn->points.erase(stable_partition(all(Fn->points), [&](int k) {
@@ -165,10 +164,8 @@ vector<face*> hull3(vector<vec3> &p) {
                 }
             }
         }
-        // There are no exposed edges
         if(v == -1) continue;
 
-        // Glue all the new cone faces together
         while(new_face[v]->e2 == NULL) {
             int u = new_face[v]->b;
             glue(new_face[v], new_face[u], new_face[v]->e2, new_face[u]->e3);
@@ -189,146 +186,9 @@ struct vec2
     ld x, y;
     vec2(){}
     vec2(ld x, ld y) : x(x), y(y) {}
-    friend ostream& operator << (ostream &out, const vec2 &v) {
-        out << v.x << ' ' << v.y;
-        return out;
-    }
-};
+} ;
 
-
-struct matrix
-{
-    ld table[3][3] = {0,};
-    matrix() {
-    }
-    matrix(ld mat[][3]) {
-        for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) table[i][j] = mat[i][j];
-    }
-    vec3 operator* (vec3 &v) {
-        vec3 ret;
-        for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) ret[i] += table[i][j] * v[j];
-        return ret;
-    }
-
-    matrix operator* (const matrix &m) const {
-        matrix ret;
-        for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) for (int k=0; k<3; ++k) {
-            ret.table[i][j] += table[i][k] * m.table[k][j];
-        }
-        return ret;
-    }
-    friend ostream& operator << (ostream &out, const matrix &m) {
-        for (int i=0; i<3; ++i) {
-            for (int j=0; j<3; ++j) out << m.table[i][j] << ' ';
-            out << endl;
-        } 
-        return out;
-    }
-};
-
-
-
-ld get_angle(vec3 hat, vec3 &p) {
-    return acos((hat * p)/((~hat) * (~p)));
-}
-
-ld get_theta(vec3 hat, vec3 &p) {
-    ld theta = get_angle(hat, p);
-    return p.y < 0 ? PI-theta : theta;
-}
-
-matrix rotate_matrix(vec3 v) {
-    if (v.x == 0 && v.y == 0) {
-        matrix ret;
-        ret.table[0][0] = ret.table[1][1] = ret.table[2][2] = 1;
-        return ret;
-    }
-    vec3 xy(v.x, v.y, 0);
-    ld theta = get_theta(vec3(1,0,0), xy);
-    ld mat_xy[3][3] = {
-        {cosl(theta), sinl(theta), 0L},
-        {-sinl(theta), cosl(theta), 0L},
-        {0, 0, 1}
-    };
-    ld phi = get_angle(vec3(0,0,1), v);
-    ld mat_y[3][3] = {
-        {cosl(phi), 0, -sinl(phi)},
-        {0, 1, 0},
-        {sinl(phi), 0, cosl(phi)}
-    };
-    return matrix(mat_y) * matrix(mat_xy);
-}
-
-struct plane {
-    ld a,b,c,d;
-    vec3 normal;
-    plane(ld a, ld b, ld c, ld d) : a(a), b(b), c(c), d(d) {
-        normal = vec3(a,b,c);
-    }
-};
-
-struct line
-{
-    vec3 point, dir;
-    line(vec3 p, vec3 dir) : point(p), dir(dir) {}
-};
-
-
-vec3 intersection_point(const plane &p, const line &l){
-    vec3 nl = p.normal;
-    ld t = -(p.d + nl * l.point) / (nl * l.dir);
-    return vec3(l.point.x + l.dir.x * t, l.point.y + l.dir.y * t, l.point.z + l.dir.z * t);
-}
-
-vector<vec3> intersection_points(const plane &p, const face &f, vector<vec3> &pts) {
-    auto plane_value = [&](vec3 &A) {
-        return p.normal * A + p.d;
-    };
-    ld vA = plane_value(pts[f.a]);
-    ld vB = plane_value(pts[f.b]);
-    ld vC = plane_value(pts[f.c]);
-    vector<vec3> ret;
-    if (vA * vB < 0) {
-        ret.push_back(intersection_point(p, line(pts[f.a], pts[f.a]-pts[f.b])));
-    }
-    if (vB * vC < 0) {
-        ret.push_back(intersection_point(p, line(pts[f.b], pts[f.b]-pts[f.c])));
-    }
-    if (vC * vA < 0) {
-        ret.push_back(intersection_point(p, line(pts[f.c], pts[f.c]-pts[f.a])));
-    }
-    return ret;
-}
-
-vector<vec3> all_inter_points(const plane &p, vector<face*> &hull, vector<vec3> &pts) {
-    vector<vec3> ret;
-    auto plane_value = [&](vec3 &A) {
-        return p.normal * A + p.d;
-    };
-    for (auto pt : pts) {
-        if (abs(plane_value(pt)) < EPS) ret.push_back(pt);
-    }
-    for (auto f : hull) {
-        vector<vec3> tmp = intersection_points(p, *f, pts);
-        ret.insert(ret.end(), all(tmp));
-    }
-    return ret;
-}
-
-vector<vec2> rotate_all_points(const plane &p, vector<vec3> &points) {
-    matrix RM = rotate_matrix(p.normal);
-    vector<vec2> ret;
-    for (int i=0; i<points.size(); ++i) {
-        points[i].z -= p.d;
-        points[i] = RM * points[i];
-        ret.emplace_back(points[i].x, points[i].y);
-    }
-    return ret;
-}
-
-
-
-struct hull2
+struct convex_hull
 {
     vec2 p0;
     int n;
@@ -337,8 +197,7 @@ struct hull2
         return (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
     }
 
-
-    hull2(vector<vec2> &pts) {
+    convex_hull(vector<vec2> &pts) {
         n = pts.size();
         int mn = 0;
         for (int i=0; i<n; ++i) {
@@ -368,38 +227,98 @@ struct hull2
     ld area(){
         ld ret = 0;
         for (int i=1; i<hull.size()-1; ++i) {
-            ret += ccw(p0, hull[i], hull[i+1])/2;
+            ret += (ld)ccw(p0, hull[i], hull[i+1])/2;
         }
         return ret;
     }
 };
 
+struct plane;
+vec3 intersect_plane(plane &pl, vec3 f, vec3 dir);
 
-int main()
+struct plane
 {
-    fastio
-    int n,m; cin >> n >> m;
-    vector<vec3> pts;
-    for (int i=0; i<n; ++i) {
-        ld x,y,z; cin >> x >> y >> z;
-        pts.emplace_back(x,y,z);
+    vec3 norm;
+    ld d;
+    plane(ld a, ld b, ld c, ld d) : d(d) {
+        norm = vec3(a, b, c);
     }
-    vector<face*> hull = hull3(pts);
-    while (m--) {
-        ld a,b,c,d;
-        cin >> a >> b >> c >> d;
-        if (n>=3) {
-            plane p(a,b,c,d);
-            vector<vec3> aip = all_inter_points(p, hull, pts);
-            if (aip.size() < 3) {
-                cout << 0 << '\n';
-                continue;
-            }
-            vector<vec2> rtdp = rotate_all_points(p, aip);
-            hull2 h2(rtdp);
-            cout << fixed << setprecision(10) << h2.area() << '\n';
-        } else {
-            cout << 0 << '\n';
+    ld val(vec3 &v) {
+        return norm.dot(v) + d;
+    }
+    tuple<vec3, vec3, vec3> coord() {
+        vec3 O(0,0,0);
+        if (d != 0) {
+            O = intersect_plane(*this, vec3(0,0,0), norm);
         }
+        vec3 never(2103, 1, 0);
+        vec3 xh = norm.cross(never);
+        vec3 yh = norm.cross(xh);
+        return {xh.hat(), yh.hat(), O};
     }
-} // namespace std;
+};
+
+
+vec3 intersect_plane(plane &pl, vec3 f, vec3 dir) {
+    ld t = -(pl.norm.dot(f) + pl.d) / (pl.norm.dot(dir));
+    return f + dir*t;
+}
+
+set<vec3> intersect_all(plane &pl, vector<face*> &f, vector<vec3> &P) {
+    set<vec3> ret;
+    for (vec3 &v : P) {
+        if (pl.val(v) == 0) ret.insert(v);
+    }
+    for (face *u : f) {
+        int a = u->a, b = u->b, c = u->c;
+        vec3 &A = P[a], &B = P[b], &C = P[c];
+        ld plA = pl.val(A); ld plB = pl.val(B); ld plC = pl.val(C);
+        if (plA == 0) ret.insert(A);
+        if (plB == 0) ret.insert(B);
+        if (plC == 0) ret.insert(C);
+        if (plA * plB < 0) ret.insert(intersect_plane(pl, A, B-A));
+        if (plB * plC < 0) ret.insert(intersect_plane(pl, B, C-B));
+        if (plC * plA < 0) ret.insert(intersect_plane(pl, C, A-C));
+    }
+    return ret;
+}
+
+vector<vec2> convert(set<vec3> &P, plane &pl) {
+    auto [xh, yh, O] = pl.coord();
+    vector<vec2> ret;
+    for (vec3 p : P) {
+        ld x = xh.dot(p-O);
+        ld y = yh.dot(p-O);
+        ret.push_back({x, y});
+    }
+    return ret;
+}
+
+int main(){
+    int n, q;
+    fastio
+    cin >> n >> q;
+    vector<vec3> P;
+    for (int i=0; i<n; ++i) {
+        ld x, y, z; cin >> x >> y >> z;
+        P.push_back({x, y, z});
+    }
+
+    
+    vector<face *> hull = hull3(P);
+    
+    while (q--) {
+        ld a, b, c, d; cin >> a >> b >> c >> d;
+        plane pl(a, b, c, d);
+        set<vec3> inter = intersect_all(pl, hull, P);
+        if (inter.size() < 3) {
+            cout << "0\n";
+            continue;
+        }
+        vector<vec2> conv = convert(inter, pl);
+        convex_hull ans(conv);
+        cout.precision(8);
+        cout << fixed << ans.area() << '\n';
+    }
+
+}

@@ -68,5 +68,5 @@ int main()
 
     convex_hull ret(pts);
     cout << ret.hull.size() << endl;
-    cout << ret.area();
+    // cout << ret.area();
 } // namespace std

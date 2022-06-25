@@ -3,6 +3,14 @@
         "iostream": "cpp",
         "filesystem": "cpp",
         "regex": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "chrono": "cpp",
+        "random": "cpp",
+        "any": "cpp",
+        "optional": "cpp",
+        "variant": "cpp",
+        "vector": "cpp",
+        "bitset": "cpp",
+        "ostream": "cpp"
     }
 }
