@@ -16,9 +16,9 @@
                 "&&",
                 "${fileDirname}/${fileBasenameNoExtension}.out",
                 "<",
-                "${fileDirname}/input.txt",
+                "${workspaceFolder}/input.txt",
                 ">",
-                "${fileDirname}/output.txt"
+                "${workspaceFolder}/output.txt"
             ],
             "group": "build",
 
